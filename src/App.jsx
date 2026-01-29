@@ -13,20 +13,6 @@ function App() {
   // Result
   const [totalNets, setTotalNets] = useState(null)
 
-  /**
-   * Calculate the dimensions of a cross-shaped net
-   * For a box with dimensions L (length), W (width), H (height):
-   * 
-   *         [W x H]
-   *            |
-   *   [L x H][L x W][L x H]
-   *            |
-   *         [W x H]
-   * 
-   * Total net dimensions:
-   * - Width: L + W + L = 2L + W
-   * - Height: H + W + H = 2H + W
-   */
   const calculateNetDimensions = (L, W, H) => {
     return {
       width: 2 * L + W,
@@ -34,10 +20,6 @@ function App() {
     }
   }
 
-  /**
-   * Calculate how many cross-shaped nets can fit in the sheet
-   * Try both orientations: normal and rotated 90 degrees
-   */
   const calculateTotalNets = () => {
     const L = parseFloat(boxLength)
     const W = parseFloat(boxWidth)
@@ -45,7 +27,6 @@ function App() {
     const sheetL = parseFloat(sheetLength)
     const sheetW = parseFloat(sheetWidth)
 
-    // Validate inputs
     if (isNaN(L) || isNaN(W) || isNaN(H) || isNaN(sheetL) || isNaN(sheetW)) {
       alert('Please enter valid numbers for all dimensions')
       return
@@ -58,171 +39,203 @@ function App() {
 
     const net = calculateNetDimensions(L, W, H)
 
-    // Try orientation 1: net placed normally
     const netsPerRow1 = Math.floor(sheetL / net.width)
     const netsPerCol1 = Math.floor(sheetW / net.height)
     const total1 = netsPerRow1 * netsPerCol1
 
-    // Try orientation 2: net rotated 90 degrees
     const netsPerRow2 = Math.floor(sheetL / net.height)
     const netsPerCol2 = Math.floor(sheetW / net.width)
     const total2 = netsPerRow2 * netsPerCol2
 
-    // Use the maximum
     const maxNets = Math.max(total1, total2)
     setTotalNets(maxNets)
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <header className="bg-white shadow">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-            📦 Efficient Box Net Cutter
-          </h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Calculate how many cross-shaped box nets can be cut from a sheet
-          </p>
+    <div className="bg-white">
+      {/* Dark Navbar */}
+      <nav className="bg-gray-900 text-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
+            <div className="flex items-center">
+              <span className="text-2xl font-bold">📦</span>
+              <span className="ml-3 text-xl font-semibold">Box Net Cutter</span>
+            </div>
+            <div className="hidden md:block text-sm text-gray-300">
+              Calculate efficient cutting layouts
+            </div>
+          </div>
         </div>
-      </header>
+      </nav>
 
-      {/* Main Content with Overlap */}
-      <main className="-mt-8">
-        <div className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
-          <div className="rounded-lg bg-white px-5 py-6 shadow sm:px-6">
-            {/* Input Forms Grid */}
-            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-              {/* Sheet Dimensions Section */}
-              <div className="rounded-lg border border-gray-200 bg-gray-50 p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  Sheet Dimensions
-                </h2>
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="sheet-length" className="block text-sm font-medium text-gray-700 mb-1">
-                      Length
-                    </label>
-                    <input
-                      id="sheet-length"
-                      type="number"
-                      value={sheetLength}
-                      onChange={(e) => setSheetLength(e.target.value)}
-                      placeholder="Enter sheet length"
-                      step="0.01"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-2 border"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="sheet-width" className="block text-sm font-medium text-gray-700 mb-1">
-                      Width
-                    </label>
-                    <input
-                      id="sheet-width"
-                      type="number"
-                      value={sheetWidth}
-                      onChange={(e) => setSheetWidth(e.target.value)}
-                      placeholder="Enter sheet width"
-                      step="0.01"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-2 border"
-                    />
-                  </div>
-                </div>
-              </div>
+      {/* Overlapping Hero Section */}
+      <div className="relative bg-gradient-to-br from-slate-50 to-slate-100 px-4 py-12 sm:px-6 lg:px-8 pb-20">
+        <div className="mx-auto max-w-7xl">
+          {/* Hero Content */}
+          <div className="mb-12 text-center">
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+              Efficient Box Net Cutter
+            </h1>
+            <p className="mt-4 text-lg text-gray-600">
+              Calculate how many cross-shaped box nets can be cut from a sheet of material
+            </p>
+          </div>
 
-              {/* Box Dimensions Section */}
-              <div className="rounded-lg border border-gray-200 bg-gray-50 p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  Box Dimensions
-                </h2>
-                <div className="space-y-4">
-                  <div>
-                    <label htmlFor="box-length" className="block text-sm font-medium text-gray-700 mb-1">
-                      Length (L)
-                    </label>
-                    <input
-                      id="box-length"
-                      type="number"
-                      value={boxLength}
-                      onChange={(e) => setBoxLength(e.target.value)}
-                      placeholder="Enter box length"
-                      step="0.01"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-2 border"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="box-width" className="block text-sm font-medium text-gray-700 mb-1">
-                      Width (W)
-                    </label>
-                    <input
-                      id="box-width"
-                      type="number"
-                      value={boxWidth}
-                      onChange={(e) => setBoxWidth(e.target.value)}
-                      placeholder="Enter box width"
-                      step="0.01"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-2 border"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="box-height" className="block text-sm font-medium text-gray-700 mb-1">
-                      Height (H)
-                    </label>
-                    <input
-                      id="box-height"
-                      type="number"
-                      value={boxHeight}
-                      onChange={(e) => setBoxHeight(e.target.value)}
-                      placeholder="Enter box height"
-                      step="0.01"
-                      className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-2 border"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Calculate Button */}
-            <div className="mt-6">
-              <button
-                onClick={calculateTotalNets}
-                className="w-full rounded-md bg-indigo-600 px-4 py-3 text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors"
-              >
-                Calculate
-              </button>
-            </div>
-
-            {/* Result Display */}
-            {totalNets !== null && (
-              <div className="mt-6 rounded-lg border-2 border-indigo-200 bg-indigo-50 p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4 text-center">
-                  Result
-                </h2>
-                <div className="text-center">
-                  <p className="text-6xl font-bold text-indigo-600 mb-2">
-                    {totalNets}
-                  </p>
-                  <p className="text-base text-gray-600">
-                    cross-shaped nets can be cut from the sheet
-                  </p>
-                  {totalNets === 0 && (
-                    <div className="mt-4 rounded-md bg-yellow-50 p-4 border border-yellow-200">
-                      <p className="text-sm text-yellow-800">
-                        ⚠️ The sheet is too small for even one net. Try a larger sheet or smaller box dimensions.
-                      </p>
+          {/* Form Card - Overlapping */}
+          <div className="relative -mb-20">
+            <div className="mx-auto max-w-4xl rounded-lg bg-white shadow-xl">
+              <div className="grid grid-cols-1 gap-8 p-8 sm:p-10 lg:grid-cols-2">
+                {/* Sheet Dimensions */}
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900 mb-6">
+                    Sheet Dimensions
+                  </h2>
+                  <div className="space-y-5">
+                    <div>
+                      <label htmlFor="sheet-length" className="block text-sm font-medium text-gray-700 mb-2">
+                        Length
+                      </label>
+                      <input
+                        id="sheet-length"
+                        type="number"
+                        value={sheetLength}
+                        onChange={(e) => setSheetLength(e.target.value)}
+                        placeholder="Enter length"
+                        step="0.01"
+                        className="block w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-0"
+                      />
                     </div>
-                  )}
+                    <div>
+                      <label htmlFor="sheet-width" className="block text-sm font-medium text-gray-700 mb-2">
+                        Width
+                      </label>
+                      <input
+                        id="sheet-width"
+                        type="number"
+                        value={sheetWidth}
+                        onChange={(e) => setSheetWidth(e.target.value)}
+                        placeholder="Enter width"
+                        step="0.01"
+                        className="block w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-0"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Box Dimensions */}
+                <div>
+                  <h2 className="text-lg font-semibold text-gray-900 mb-6">
+                    Box Dimensions
+                  </h2>
+                  <div className="space-y-5">
+                    <div>
+                      <label htmlFor="box-length" className="block text-sm font-medium text-gray-700 mb-2">
+                        Length (L)
+                      </label>
+                      <input
+                        id="box-length"
+                        type="number"
+                        value={boxLength}
+                        onChange={(e) => setBoxLength(e.target.value)}
+                        placeholder="Enter length"
+                        step="0.01"
+                        className="block w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-0"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="box-width" className="block text-sm font-medium text-gray-700 mb-2">
+                        Width (W)
+                      </label>
+                      <input
+                        id="box-width"
+                        type="number"
+                        value={boxWidth}
+                        onChange={(e) => setBoxWidth(e.target.value)}
+                        placeholder="Enter width"
+                        step="0.01"
+                        className="block w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-0"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="box-height" className="block text-sm font-medium text-gray-700 mb-2">
+                        Height (H)
+                      </label>
+                      <input
+                        id="box-height"
+                        type="number"
+                        value={boxHeight}
+                        onChange={(e) => setBoxHeight(e.target.value)}
+                        placeholder="Enter height"
+                        step="0.01"
+                        className="block w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-0"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
-            )}
 
-            {/* Info Section */}
-            <div className="mt-6 rounded-lg border border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-              <h3 className="text-base font-semibold text-gray-900 mb-3">
-                Cross-Shaped Net Pattern
-              </h3>
-              <div className="rounded-md bg-gray-800 p-4 overflow-x-auto">
-                <pre className="text-sm text-indigo-400 font-mono whitespace-pre">
+              {/* Button */}
+              <div className="border-t border-gray-200 px-8 py-6 sm:px-10">
+                <button
+                  onClick={calculateTotalNets}
+                  className="w-full rounded-lg bg-indigo-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transition-colors"
+                >
+                  Calculate
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Results Section */}
+      <div className="bg-white px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          {totalNets !== null && (
+            <div className="rounded-lg border border-gray-200 bg-white p-12 shadow-lg">
+              <div className="text-center">
+                <h2 className="text-base font-semibold text-indigo-600">RESULT</h2>
+                <p className="mt-4 text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+                  {totalNets}
+                </p>
+                <p className="mt-4 text-lg text-gray-600">
+                  cross-shaped nets can be cut from your sheet
+                </p>
+                {totalNets === 0 && (
+                  <div className="mt-6 rounded-lg bg-yellow-50 p-4 border border-yellow-200">
+                    <p className="text-sm text-yellow-800">
+                      ⚠️ The sheet is too small. Try a larger sheet or smaller box dimensions.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {totalNets === null && (
+            <div className="text-center py-12">
+              <p className="text-gray-500 text-lg">
+                Enter your dimensions and click Calculate to see results
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Info Section */}
+      <div className="bg-gray-50 px-4 py-20 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-4xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold tracking-tight text-gray-900">
+              Cross-Shaped Net Pattern
+            </h2>
+            <p className="mt-4 text-lg text-gray-600">
+              This is the layout pattern for each box net
+            </p>
+          </div>
+          <div className="rounded-lg bg-white p-8 shadow-sm border border-gray-200">
+            <div className="bg-gray-900 rounded-lg p-6 overflow-x-auto">
+              <pre className="text-sm text-green-400 font-mono whitespace-pre">
 {`         [Top]
          W × H
             |
@@ -232,15 +245,21 @@ L × H   L × W  L × H
        [Bottom]
         W × H
 
-Net dimensions:
+Net Dimensions:
 • Width: 2L + W
 • Height: 2H + W`}
-                </pre>
-              </div>
+              </pre>
             </div>
           </div>
         </div>
-      </main>
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-gray-300 px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl text-center text-sm">
+          <p>📦 Efficient Box Net Cutter • Optimize your material usage</p>
+        </div>
+      </footer>
     </div>
   )
 }
